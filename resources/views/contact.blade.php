@@ -19,10 +19,8 @@
         <div class="row justify-content-center">
             <div class="col-xl-7 col-lg-7 col-sm-10">
                 <div class="section-title text-center">
-                    <h2>To any Question Contact Us</h2>
-                    <p>To sure calm much most long me mean. Able rent long in do we. Uncommonly no it announcing
-                        melancholy an in. Mirth
-                        learn it he given.</p>
+                    {!! $contact_heading->value !!}
+                    {!! $contact_text->value !!}
                 </div>
             </div>
         </div>
