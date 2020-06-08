@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        $this->call(AboutPageMetas::class);
+        $this->call(FaqSeeder::class);
+        $this->call(ContactPageMetas::class);
     }
 }

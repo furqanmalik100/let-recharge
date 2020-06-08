@@ -16,9 +16,9 @@
                                 <div class="select-country">
                                     <select class="form-control" id="country-list" required="" name="country_id">
                                         <option selected disabled="" value="">Select Your Country</option>
-                                        @foreach($countries as $c)
+                                        {{-- @foreach($countries as $c)
                                         <option value="{{ $c->country_id }}">{{ $c->country }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                                 <div class="banner-features-list">
