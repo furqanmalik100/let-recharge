@@ -1,3 +1,10 @@
+@php
+    $favicon = App\HomeSectionMeta::where('name','=','site_favicon')->first();
+    $logo = App\HomeSectionMeta::where('name','=','site_logo')->first();
+    $footer_text = App\HomeSectionMeta::where('name','=','footer_text')->first();
+    $footer_copyright_text = App\HomeSectionMeta::where('name','=','footer_copyright_text')->first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,7 +13,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>@yield('title') | LetRecharge</title>
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ asset('cms/home/'. $favicon->value) }}" type="image/x-icon">
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/fonts/flaticon.css') }}">
@@ -50,6 +57,12 @@
                 margin: 15px 0px;
             }
             .bold{
+                font-weight: bold !important;
+            }
+            .hero h1,
+            .hero h2,
+            .hero h3,
+            .hero h4{
                 font-weight: bold !important;
             }
             .promo-slider .img-container{
@@ -127,8 +140,8 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-6 d-xl-block d-lg-block d-flex align-items-center">
                                 <div class="logo">
-                                    <a href="index.html">
-                                        <img src="{{ asset('assets/img/logo.png') }}" alt="">
+                                    <a href="/">
+                                        <img src="{{ asset('cms/home/'. $logo->value) }}" alt="">
                                     </a>
                                 </div>
                             </div>
@@ -173,20 +186,27 @@
 
         @yield('content')
 
+        @php
+            $facebook = App\SocialLinksMeta::where('platform_name','=','facebook')->first();
+            $twitter = App\SocialLinksMeta::where('platform_name','=','twitter')->first();
+            $instagram = App\SocialLinksMeta::where('platform_name','=','instagram')->first();
+            $pinterest = App\SocialLinksMeta::where('platform_name','=','pinterest')->first();
+            $youtube = App\SocialLinksMeta::where('platform_name','=','youtube')->first();
+        @endphp
         <!-- footer begin -->
         <div class="footer">
             <div class="container">
                 <div class="row justify-content-between">
                     <div class="col-sm-6 col-xl-4 col-lg-4">
                         <div class="about-area">
-                            <a class="logo" href="index.html"><img src="{{ asset('assets/img/logo.png') }}" alt=""></a>
-                            <p>Advice me cousin an spring of needed. Tell use paid law ever yet new. Meant to learn of vexed if style allow he there.</p>
+                            <a class="logo" href="/"><img src="{{ asset('cms/home/'. $logo->value) }}" alt=""></a>
+                            {!! $footer_text->value !!}
                             <ul class="social">
-                                <li><a class="social-link" href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a class="social-link" href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a class="social-link" href="#"><i class="fab fa-instagram"></i></a></li>
-                                <li><a class="social-link" href="#"><i class="fab fa-pinterest-p"></i></a></li>
-                                <li><a class="social-link" href="#"><i class="fab fa-youtube"></i></a></li>
+                                <li><a class="social-link" href="{{ $facebook->link }}"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a class="social-link" href="{{ $twitter->link }}"><i class="fab fa-twitter"></i></a></li>
+                                <li><a class="social-link" href="{{ $instagram->link }}"><i class="fab fa-instagram"></i></a></li>
+                                <li><a class="social-link" href="{{ $pinterest->link }}"><i class="fab fa-pinterest-p"></i></a></li>
+                                <li><a class="social-link" href="{{ $youtube->link }}"><i class="fab fa-youtube"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -235,7 +255,7 @@
                 <div class="row justify-content-center">
                     <div class="col-xl-4 col-lg-4">
                         <div class="copyright-area">
-                            <p>2020 All Rights Reserved. - Created by <a href="index.html">DevioTech</a></p>
+                            {!! $footer_copyright_text->value !!}
                         </div>
                     </div>
                 </div>

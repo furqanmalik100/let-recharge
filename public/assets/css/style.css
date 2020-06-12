@@ -298,7 +298,7 @@ ul {
     banner
 ==========================================*/
 .banner .banner-content {
-  background: url("../img/banner.jpg") center top no-repeat;
+  
   background-size: 100%;
   position: relative;
   z-index: 2;

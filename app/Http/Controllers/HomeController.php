@@ -17,7 +17,9 @@ class HomeController extends Controller
     public function index()
     {
         $countries = $this->countries();
-        return view('index', compact('countries'));
+        $hero_image = HomeSectionMeta::where('name','=','hero_image')->first();
+        $hero_image_heading = HomeSectionMeta::where('name','=','hero_image_heading')->first();
+        return view('index', compact('countries','hero_image_heading','hero_image'));
     }
 
     public function about()
