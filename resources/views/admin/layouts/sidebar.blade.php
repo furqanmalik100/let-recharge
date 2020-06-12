@@ -19,12 +19,19 @@
             <li><a href="my-profile.html"><i class="zmdi zmdi-account"></i><span>Our Profile</span></a></li>
             <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>CMS</span></a>
                 <ul class="ml-menu">
-                    <li><a href="mail-inbox.html">Homepage</a></li>
+                    <li><a href="{{ route('home-page') }}">Homepage</a></li>
                     <li><a href="{{ route('about-page') }}">About Us</a></li>
                     <li><a href="{{ route('faq.index') }}">Faqs</a></li>
-                    <li><a href="{{ route('contact-page') }}">Contact Us</a></li>                    
+                    <li><a href="{{ route('contact-page') }}">Contact Us</a></li>   
+                    <li><a href="{{ route('social-links') }}">Social Links</a></li>                   
                 </ul>
             </li>
+            <li><a href="javascript:void(0);"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();"><i class="zmdi zmdi-account"></i><span>Logout</span></a></li>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </ul>
     </div>
 </aside>

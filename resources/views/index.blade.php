@@ -1,17 +1,20 @@
+@php
+    $path = 'cms/home/';
+@endphp
 @extends('layouts.main')
 @section('title', 'Home')
 @section('content')
 <!-- banner begin -->
 <div class="banner">
-    <div class="banner-content">
+    <div class="banner-content" style="background: url('{{asset('cms/home/'. $hero_image->value)}}') center top no-repeat;">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-lg-12">
                     <form method="get" action="{{ route('topup') }}">
                         <div class="row">
                             <div class="col-xl-6 col-lg-6 text-left">
-                                <div class="text">
-                                    <h4 class="bold">online <span class="text-warning">recharge</span> you're mobile.</h4>
+                                <div class="text hero">
+                                    {!! $hero_image_heading->value !!}
                                 </div>
                                 <div class="select-country">
                                     <select class="form-control" id="country-list" required="" name="country_id">

@@ -26,13 +26,25 @@ Route::get('get-products', 'ServicesController@getProducts')->name('products');
 Route::get('topup', 'ServicesController@orderPage')->name('topup');
 
 // Admin Routes
-Route::group(['prefix' => 'admin'], function () {
+
+Route::get('admin/login', 'Admin\AdminLoginController@showLoginForm')->name('admin-login');
+Route::post('admin/login', 'Admin\AdminLoginController@login')->name('admin-login-post');
+
+Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
     Route::get('/dashboard', 'Admin\DashboardController@index')->name('admin-dashboard');
     
+    Route::get('/cms/home-page', 'Admin\HomeSectionMetaController@index')->name('home-page');
+    Route::post('/cms/home-page', 'Admin\HomeSectionMetaController@save')->name('home-page-save');
+
     Route::get('/cms/about-page', 'Admin\AboutSectionMetaController@index')->name('about-page');
     Route::post('/cms/about-page', 'Admin\AboutSectionMetaController@save')->name('about-page-save');
+
     Route::resource('/cms/faq', 'Admin\FaqController');
     Route::get('/cms/faq/status-change/{id}', 'Admin\FaqController@statusChange')->name('status-change');
+
     Route::get('/cms/contact-page', 'Admin\ContactController@index')->name('contact-page');
     Route::post('/cms/contact-page', 'Admin\ContactController@save')->name('contact-page-save');
+
+    Route::get('/cms/social-links', 'Admin\SocialLinksMetaController@index')->name('social-links');
+    Route::post('/cms/social-links', 'Admin\SocialLinksMetaController@save')->name('social-links-save');
 });
