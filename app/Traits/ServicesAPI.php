@@ -15,8 +15,8 @@ trait ServicesAPI
 	{
 		$this->host = 'https://gs-api.dtone.com/v1.1';
 
-		$key = '080a9b5c-3a71-406f-bb6e-4aa414cff6ee';
-		$secret = 'b7a993b3-5677-490e-9975-628baf25e6fe';
+		$key = '7dff6ca2-5be1-4df9-a1ea-3ca27aea0d18';
+		$secret = '5b76143c-7953-4a6d-b861-a1495c10fd0e';
 		$nonce = gettimeofday(true);
 		$hmac = base64_encode(hash_hmac('sha256', $key.$nonce, $secret, true ));
 
@@ -48,10 +48,11 @@ trait ServicesAPI
 
 	public function countries()
 	{
-		if(session('countries'));
+		if(session('countries'))
 			return session('countries');
 
 		$response = $this->call("countries", "get");
+		dd($response);
 		$countries = $response->body->countries;
 		session(['countries' => $countries]);
 		return $countries;
