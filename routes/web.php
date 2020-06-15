@@ -47,4 +47,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
 
     Route::get('/cms/social-links', 'Admin\SocialLinksMetaController@index')->name('social-links');
     Route::post('/cms/social-links', 'Admin\SocialLinksMetaController@save')->name('social-links-save');
+
+    Route::get('/profile', 'Admin\AdminProfileController@index')->name('admin-profile');
+    Route::post('/profile', 'Admin\AdminProfileController@store')->name('admin-profile-save');
 });
