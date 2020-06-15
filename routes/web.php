@@ -88,4 +88,7 @@ Route::group(['prefix'=>'user','middleware'=>['auth']],function(){
 
     Route::get('repeat-service/{id}', 'UserController@repeatService')->name('repeat.service');
     Route::get('repeat-airtime/{id}', 'UserController@repeatAirtime')->name('repeat.airtime');
+    
+    Route::get('/profile', 'Admin\AdminProfileController@index')->name('admin-profile');
+    Route::post('/profile', 'Admin\AdminProfileController@store')->name('admin-profile-save');
 });

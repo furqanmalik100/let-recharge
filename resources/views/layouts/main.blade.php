@@ -222,9 +222,9 @@
         <div class="footer">
             <div class="container">
                 <div class="row justify-content-between">
-                    <div class="col-sm-6 col-xl-4 col-lg-4">
+                    <div class="col-sm-8 col-xl-8 col-lg-8">
                         <div class="about-area">
-                            <a class="logo" href="/"><img src="{{ asset('cms/home/'. $logo->value) }}" alt=""></a>
+                            <a class="logo" href="/"><img src="{{ asset('cms/home/'. $logo->value) }}" width="300" class="img-fluid" alt=""></a>
                             {!! $footer_text->value !!}
                             <ul class="social">
                                 <li><a class="social-link" href="{{ $facebook->link }}"><i class="fab fa-facebook-f"></i></a></li>
@@ -235,36 +235,15 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-2 col-lg-2">
+                    <div class="col-sm-4 col-xl-4 col-lg-4">
                         <div class="useful-link">
                             <h3>Who we are</h3>
                             <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">My Account</a></li>
-                                <li><a href="#">Privacy and Cookie Policy</a></li>
-                                <li><a href="#">Terms and Conditions</a></li>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Customer Reviews</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-2 col-lg-2">
-                        <div class="useful-link">
-                            <h3>What we offer</h3>
-                            <ul>
-                                <li><a href="#">Mobile Recharge</a></li>
-                                <li><a href="#">Promotions</a></li>
-                                <li><a href="#">Countries</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-2 col-lg-2">
-                        <div class="useful-link">
-                            <h3>Help & Support</h3>
-                            <ul>
-                                <li><a href="#">Faq</a></li>
+                                <li><a href="{{ route('home') }}">Home</a></li>
+                                <li><a href="{{ route('about') }}">About Us</a></li>
+                                <li><a href="{{ route('faqs') }}">FAQs</a></li>
+                                <li><a href="{{ route('contact') }}">Contact</a></li>
+                                <li><a href="{{ route('login') }}">Login</a></li>
                             </ul>
                         </div>
                     </div>
