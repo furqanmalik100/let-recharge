@@ -60,6 +60,13 @@
         <script src="{{ asset('admin/assets/js/pages/forms/dropify.js') }}"></script>
         <script src="{{ asset('admin/assets/js/pages/tables/jquery-datatable.js') }}"></script>
 
+        <script type="text/javascript">
+            @if(session('success'))
+            toastr.success("{{ session('success') }}");
+            @endifif(session('error'))
+            toastr.error("{{ session('error') }}");
+            @endif
+        </script>
         @stack('js')
     </body>
 </html>

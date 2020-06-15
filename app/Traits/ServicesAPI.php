@@ -29,8 +29,21 @@ trait ServicesAPI
 
 	public function call($uri, $method, $params = [])
 	{
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "$this->host/$uri");
+		$ch = curl_init();	
+		
+		if($method == 'get')
+		{
+			curl_setopt($ch, CURLOPT_URL, "$this->host/$uri");
+		}
+		else
+		{
+			$params = $this->renderParams($params);
+			curl_setopt($ch, CURLOPT_URL, "$this->host/$uri");
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,
+            $params);
+		}
+
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$output = curl_exec($ch);
@@ -46,13 +59,35 @@ trait ServicesAPI
 		];
 	}
 
+	public function renderParams($params)
+	{
+		$result = '';
+		foreach ($params as $key => $value)
+			$result .= $key . '=' . $value . '&';
+
+		return rtrim($result, '&');
+	}
+
+	public function serviceEnabled($country_id)
+	{
+		return $this->getCountryName($country_id) != '';
+	}
+
+	public function getCountryName($country_id)
+	{
+		foreach (session('countries') as $c) {
+			if($country_id == $c->country_id)
+				return $c->country;
+		}
+		return '';
+	}
+
 	public function countries()
 	{
 		if(session('countries'))
 			return session('countries');
 
 		$response = $this->call("countries", "get");
-		dd($response);
 		$countries = $response->body->countries;
 		session(['countries' => $countries]);
 		return $countries;
@@ -66,13 +101,19 @@ trait ServicesAPI
 
 	public function operators($country_id, $service_id)
 	{
-		$response = $this->call("operators?country_id=$country_id&service_id=7", "get");
+		$response = $this->call("operators?service_id=7&country_id=$country_id", "get");
 		return $response->body->operators;
 	}
 
 	public function products($operator_id)
 	{
 		$response = $this->call("operators/$operator_id/products", "get");
-		return $response->body;
+		return $response->body->fixed_value_recharges;
+	}
+
+	public function createFixedValueTransaction($data)
+	{
+		$response = $this->call('transactions/fixed_value_recharges', 'post', $data);
+		return $response;
 	}
 }

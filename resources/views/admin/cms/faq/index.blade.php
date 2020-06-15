@@ -139,7 +139,7 @@
                         error : function(){
                             swal({
                                 title: 'Opps...',
-                                text : "There is and error",
+                                text : "There is an error",
                                 type : 'error',
                                 timer : '1500'
                             })

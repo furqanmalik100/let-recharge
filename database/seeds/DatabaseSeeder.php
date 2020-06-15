@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FaqSeeder::class);
         $this->call(ContactPageMetas::class);
         $this->call(SocialLinksMetas::class);
+        $this->call(PromoSeeder::class);
     }
 }

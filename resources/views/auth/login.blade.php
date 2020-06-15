@@ -24,21 +24,22 @@
             <div class="col-xl-8 col-lg-8">
                 <div class="form-area">
                     <h2>login here</h2>
-                    <form action="user-dashboard.html">
+                    <form action="{{ route('login') }}" method="post">
+                        @csrf
                         <div class="single-input-box">
-                            <label>user name</label>
-                            <input type="text" placeholder="user name">
+                            <label>Email</label>
+                            <input type="email" name="email" placeholder="Enter email">
                         </div>
                         <div class="single-input-box">
                             <label>password</label>
-                            <input type="password" placeholder="password">
+                            <input type="password" placeholder="password" name="password">
                         </div>
                         <button type="submit">Login Account</button>
                     </form>
-                    <div class="login-with-social">
-                        <a href="#">Facebook</a>
-                        <a href="#">Google</a>
-                        <a href="#">twitter</a>
+                    <div class="mt-2 text-center">
+                        <p>
+                            Don't have an account? <a href="{{ route('register') }}" class="text-warning">Register Now</a>
+                        </p>
                     </div>
                 </div>
             </div>

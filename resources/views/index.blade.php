@@ -10,70 +10,61 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-lg-12">
-                    <form method="get" action="{{ route('topup') }}">
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6 text-left">
-                                <div class="text hero">
-                                    {!! $hero_image_heading->value !!}
-                                </div>
-                                <div class="select-country">
-                                    <select class="form-control" id="country-list" required="" name="country_id">
-                                        <option selected disabled="" value="">Select Your Country</option>
-                                        @foreach($countries as $c)
-                                        <option value="{{ $c->country_id }}">{{ $c->country }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="banner-features-list">
-                                    <ul>
-                                        <li>
-                                            <i class="fa fa-check-circle"></i> Fast & secure top up service
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-check-circle"></i> Send credit in over 140 countries
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-check-circle"></i> Refill minutes & data in 3 easy steps
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-check-circle"></i> Great offers for instant top ups
-                                        </li>
-                                        <li>
-                                            <i class="fa fa-check-circle"></i> Stay in touch with family & friends
-                                        </li>
-                                    </ul>
-                                </div>
-                                <input type="hidden" name="operator_id" id="operator_id">
-                                <div id="operators"></div>
-                                <button class="theme-btn" id="recharge-submit" type="submit">Recharge Now</button>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 text-left">
+                            <div class="text hero">
+                                {!! $hero_image_heading->value !!}
                             </div>
-                            <div class="col-xl-6 col-lg-6 text-center">
-                                <div class="promo-slider">
-                                    <div class="single-promo text-center">
-                                        <h6 class="text-warning bold mb-0 uppercase">Pakistan</h6>
-                                        <div class="img-container">
-                                            <img src="https://mobilerecharge.com/images/operators/ncell.jpg" alt="">
-                                        </div>
-                                        <h6 class="text-white"><b class="text-warning">50%</b> discount on <b class="text-warning">Zong</b></h6>
+                            <div class="select-country">
+                                <select class="form-control" id="country-list" required="" name="country_id">
+                                    <option selected disabled="" value="">Select Your Country</option>
+                                    @foreach($countries as $c)
+                                    <option value="{{ $c->country_id }}">{{ $c->country }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="banner-features-list">
+                                <ul>
+                                    <li>
+                                        <i class="fa fa-check-circle"></i> Fast & secure top up service
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"></i> Send credit in over 140 countries
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"></i> Refill minutes & data in 3 easy steps
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"></i> Great offers for instant top ups
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"></i> Stay in touch with family & friends
+                                    </li>
+                                </ul>
+                            </div>
+                            <form class="d-inline" method="get" action="{{ route('services') }}">
+                                <input type="hidden" name="selected_country" class="selected_country">
+                                <button class="theme-btn">All Services</button>
+                            </form>
+                            <form class="d-inline" method="get" action="{{ route('airtime') }}">
+                                <input type="hidden" name="selected_country" class="selected_country">
+                                <button class="theme-btn">Mobile Topup</button>
+                            </form>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 text-center">
+                            <div class="promo-slider">
+                                @foreach($promos as $p)
+                                <div class="single-promo text-center">
+                                    <h6 class="text-warning bold mb-0 uppercase">{{ $p->country }}</h6>
+                                    <div class="img-container">
+                                        <img src="https://operator-logo.dtone.com/logo-{{ $p->operator_id }}-2.png" alt="{{ $p->operator }}">
                                     </div>
-                                    <div class="single-promo text-center">
-                                        <h6 class="text-warning bold mb-0 uppercase">India</h6>
-                                        <div class="img-container">
-                                            <img src="https://mobilerecharge.com/images/operators/ncell.jpg" alt="">
-                                        </div>
-                                        <h6 class="text-white"><b class="text-warning">50%</b> discount on <b class="text-warning">Zong</b></h6>
-                                    </div>
-                                    <div class="single-promo text-center">
-                                        <h6 class="text-warning bold mb-0 uppercase">Nepal</h6>
-                                        <div class="img-container">
-                                            <img src="https://mobilerecharge.com/images/operators/ncell.jpg" alt="">
-                                        </div>
-                                        <h6 class="text-white"><b class="text-warning">50%</b> discount on <b class="text-warning">Zong</b></h6>
-                                    </div>
+                                    <h6 class="text-white"><b class="text-warning">{{ $p->info }}</b></h6>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -505,13 +496,7 @@
         }
     }); 
     $('[name="country_id"]').change(function(){
-        $.post('{{ route("operators") }}', {
-            _token: '{{ csrf_token() }}',
-            country_id: $(this).val()
-        }, function(response){
-            $('.banner-features-list').hide();
-            $('#operators').html(response).show();
-        });
+        $('.selected_country').val($(this).val());
     });
     $(document).on('click', '.operator-img-box', function(){
         $('#operator_id').val($(this).data('id'));

@@ -1735,7 +1735,7 @@ ul {
 ==========================================*/
 .faq {
   padding: 120px 0 90px; }
-  .faq a {
+  .faq a:not(.btn) {
     background: rgba(0, 213, 99, 0.09);
     color: #2d2d43;
     display: inline-block;

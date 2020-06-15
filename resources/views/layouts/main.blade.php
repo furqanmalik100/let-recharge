@@ -32,16 +32,20 @@
             }
             .theme-btn{
                 display: inline-block;
-                width: 220px;
-                height: 50px;
+                padding: 10px 30px;
                 border-radius: 5px;
                 background: #F69625;
                 color: #fff;
-                line-height: 48px;
+                line-height: 20px;
                 text-align: center;
-                border: 1px solid #F69625;
+                border: 2px solid #F69625;
                 cursor: pointer;
                 transition: .3s;
+                font-weight: bold;
+            }
+            .theme-btn.inverse-btn{
+                background: #fff;
+                color: #F69625;
             }
             .theme-btn:hover{
                 background: transparent;
@@ -94,11 +98,7 @@
             .uppercase{
                 text-transform: uppercase;
             }
-            #operators{
-                margin-bottom: 30px;
-                display: none;
-            }
-            .operator-img-box{
+            .operator-img-box, .product-box{
                 width: 150px;
                 height: 100px;
                 background-color: #fff;
@@ -115,10 +115,20 @@
             }
             .operator-img{
                 width: 100px;
+                max-height: 100px;
             }
-            .operator-img-box.faded{
-                opacity: .6;
+            .product-box .desc{
+                font-size: 12px;
+            }
+            .operator-img-box.selected{
+                box-shadow: 0px 0px 10px #ddd;
                 transition: .3s;
+                background: #F69625;
+            }
+            .product-box.selected{
+                box-shadow: 0px 0px 10px #ddd;
+                transition: .3s;
+                border-color: #F69625;
             }
         </style>
         @stack('css')
@@ -171,9 +181,24 @@
                                         <li class="nav-item">
                                             <a class="nav-link {{ Route::currentRouteName() == 'contact' ? 'active ' : '' }}" href="{{ route('contact') }}">Contact</a>
                                         </li>
+                                        @guest
                                         <li class="nav-item">
                                             <a class="nav-link {{ Route::currentRouteName() == 'login' ? 'active ' : '' }}" href="{{ route('login') }}">Login</a>
                                         </li>
+                                        @else
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                My Account
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <a class="dropdown-item" href="{{ route('user.dashboard') }}">Dashboard</a>
+                                                <a class="dropdown-item" href="{{ route('user.profile') }}">My Information</a>
+                                                <a class="dropdown-item" href="javascript:;" onclick="document.getElementById('logout-form').submit()">Logout</a>
+                                                <form id="logout-form" method="post" class="d-none" action="{{ route('logout') }}">@csrf</form>
+                                            </div>
+                                        </li>
+                                        @endguest
                                     </ul>
                                 </div>
                             </nav>
