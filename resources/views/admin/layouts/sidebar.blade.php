@@ -8,13 +8,11 @@
         <ul class="list">
             <li>
                 <div class="user-info justify-content-center">
-                        <h4>{{ Auth::user()->name }}</h4>
-                        <small>Super Admin</small>
-                    </div>
+                    <h4>{{ Auth::user()->name }}</h4>
+                    <small>Super Admin</small>
                 </div>
             </li>
             <li class="active open"><a href="{{ route('admin-dashboard') }}"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
-            <li><a href="my-profile.html"><i class="zmdi zmdi-account"></i><span>Our Profile</span></a></li>
             <li><a href="{{ route('promo.list') }}"><i class="zmdi zmdi-label"></i><span>Promos</span></a></li>
             <li><a href="{{ route('customer.list') }}"><i class="zmdi zmdi-account"></i><span>Customers</span></a></li>
             <li><a href="{{ route('transaction.list') }}"><i class="zmdi zmdi-view-list-alt"></i><span>Transactions</span></a></li>
@@ -28,6 +26,7 @@
                     <li><a href="{{ route('social-links') }}">Social Links</a></li>                   
                 </ul>
             </li>
+            <li><a href="{{ route('admin.settings') }}"><i class="zmdi zmdi-settings"></i><span>Settings</span></a></li>
             <li><a href="javascript:void(0);"
                 onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="zmdi zmdi-account"></i><span>Logout</span></a></li>

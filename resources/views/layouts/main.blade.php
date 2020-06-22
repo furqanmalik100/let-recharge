@@ -193,7 +193,6 @@
                                             </a>
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                                 <a class="dropdown-item" href="{{ route('user.dashboard') }}">Dashboard</a>
-                                                <a class="dropdown-item" href="{{ route('user.profile') }}">My Information</a>
                                                 <a class="dropdown-item" href="javascript:;" onclick="document.getElementById('logout-form').submit()">Logout</a>
                                                 <form id="logout-form" method="post" class="d-none" action="{{ route('logout') }}">@csrf</form>
                                             </div>

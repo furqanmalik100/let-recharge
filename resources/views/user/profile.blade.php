@@ -93,12 +93,12 @@
                             <div class="bill-fields">
                                 <div class="d-flex flex-row justify-content-between form-row">
                                     <div class="form-group col-12">
-                                        <input type="text" name="name" placeholder="Full Name"  maxlength="50" value="{{ $user->name }}">
+                                        <input type="text" name="name" placeholder="Full Name"  maxlength="50" value="{{ $user->name ?? '' }}">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-12">
-                                        <input type="text" name="phone" placeholder="Phone number"  maxlength="50" value="{{ $user->profile->phone }}">
+                                        <input type="text" name="phone" placeholder="Phone number"  maxlength="50" value="{{ $user->profile->phone ?? '' }}">
                                     </div>
                                 </div>
                                 <div class="d-flex flex-row justify-content-between form-row">
@@ -110,7 +110,7 @@
 		                                    @endforeach
                                         </select>
                                     </div>
-                                    <input type="hidden" name="country" value="{{ $user->profile->country }}">
+                                    <input type="hidden" name="country" value="{{ $user->profile->country ?? '' }}">
                                 </div>
                             </div>
                             <button type="submit" name="" class="update-info btn btn-primary float-right">Save</button>
@@ -125,11 +125,11 @@
                         </div>
                         <div class="mb-5">
                             <div class="color-grey-medium fs-14">Phone:</div>
-                            <div class="fs-16" data-update="bill_phone">{{ $user->profile->phone }}</div>
+                            <div class="fs-16" data-update="bill_phone">{{ $user->profile->phone ?? '' }}</div>
                         </div>
                         <div class="mb-5">
                             <div class="color-grey-medium fs-14">Country:</div>
-                            <div class="fs-16" data-update="bill_country">{{ $user->profile->country }}</div>
+                            <div class="fs-16" data-update="bill_country">{{ $user->profile->country ?? '' }}</div>
                         </div>
                     </div>
                 </div>

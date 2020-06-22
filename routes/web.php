@@ -36,7 +36,8 @@ Route::group(['prefix' => 'mobile-topup'], function(){
     Route::get('/', 'AirtimeController@index')->name('airtime');
     Route::get('/show-summary', 'AirtimeController@showSummary')->name('airtime.show-summary');
     Route::get('/payment-complete', 'AirtimeController@showDone')->name('airtime.show-done');
-
+    
+    Route::post('get-products', 'AirtimeController@getProducts')->name('airtime.products');
     Route::post('save-order-details', 'AirtimeController@saveOrderDetails')->name('save.airtime-order.details');
     Route::post('save-order-payment', 'AirtimeController@saveOrderPayment')->name('save.airtime-order.payment');
 });
@@ -76,6 +77,10 @@ Route::group(['prefix'=>'admin','middleware'=>['auth','admin']],function(){
 
         Route::post('get-operators', 'Admin\PromoController@getOperators')->name('promo.operators');
     });
+
+    
+    Route::get('/settings', 'Admin\GeneralSettingsController@index')->name('admin.settings');
+    Route::post('/settings', 'Admin\GeneralSettingsController@store')->name('admin.settings.save');
 });
 
 Route::group(['prefix'=>'user','middleware'=>['auth']],function(){

@@ -71,7 +71,8 @@
                                 <label for="phone-num">Enter the Phone Number You Want to
                                     Top-up</label>
                                 <input type="text" name="phone" id="phone" class="form-control" type="tel" value="{{ $orderData->phone_number ?? '' }}">
-                                <div id="valid-msg" class="hide alert alert-success">✓ Valid Number - Loading Products ..</div>
+                                <div id="valid-msg" class="{{ !empty($orderData->phone_number) ? '' : 'hide' }} alert alert-success">✓ Valid Number</div>
+                                <div id="loading"></div>
                                 <div id="error-msg" class="hide alert alert-danger"></div>
                                 <input type="hidden" name="phone_number" id="phone_number" value="{{ $orderData->phone_number ?? '' }}">
                             </div>
@@ -94,7 +95,6 @@
                                     <tr>
                                         <th scope="col">Recipient</th>
                                         <th scope="col">Country</th>
-                                        <th scope="col">Product</th>
                                         <th scope="col">Price</th>
                                     </tr>
                                 </thead>
@@ -102,12 +102,10 @@
                                     <tr>
                                         <th scope="row" id="r-phone">{{ $orderData->phone_number }}</th>
                                         <td id="r-country">{{ $orderData->country }}</td>
-                                        <td id="r-product">{{ $orderData->product }}</td>
                                         <td id="r-price">{{ $orderData->amount }} {{ $orderData->currency }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Total</th>
-                                        <td></td>
                                         <td></td>
                                         <td id="r-total">{{ $orderData->amount }} {{ $orderData->currency }}</td>
                                     </tr>
@@ -118,8 +116,8 @@
                         <form method="post" action="{{ route('save.airtime-order.payment') }}">
                             @csrf
                             <div class="buttons">
-                                <a class="base-button" href="javascript:;" id="pay-amount" 
-                                data-key="pk_test_YSnWvfoEhc4OukRBrk3qNFtM00vh7y94PO"
+                                <a class="theme-btn bold" href="javascript:;" id="pay-amount" 
+                                data-key="{{ App\Setting::pluck('stripe_public_key')->first() }}"
                                 data-amount="{{ $orderData->amount * 100 }}"
                                 data-currency="USD"
                                 data-name="Let Recharge"
@@ -135,8 +133,8 @@
                     <div class="tab-pane fade show active" id="done" role="tabpanel" aria-labelledby="done-tab">
                         <div class="done">
                             <h3 class="title">Payment Successful</h3>
-                            <img src="{{ asset('assets/img/checked.png') }}" alt="" class="d-block mb-4">
-                            <a href="{{ route('user.dashboard') }}" class="theme-btn">Go to Dashboard</a>
+                            <img src="{{ asset('assets/img/checked.png') }}" alt="" class="mb-4">
+                            <a href="{{ route('user.dashboard') }}" class="theme-btn d-block">Go to Dashboard</a>
                         </div>
                     </div>
                     @endif
@@ -148,6 +146,11 @@
 </form>
 @endsection
 @push('js') 
+<script>
+    $('#payment-tab, #order-details-tab, #done-tab').click(function(){
+        return false;
+    });
+</script>
 @if(!empty($showSummary))
 <script src="https://checkout.stripe.com/v2/checkout.js"></script>
 <script type="text/javascript">
@@ -181,6 +184,22 @@
         let key = Object.keys(isoCountries).find(k=>isoCountries[k]===value);
         return [key];
 	}
+    function loadAmounts()
+	{
+	    $("#loading").html('<img width="50" src="https://thumbs.gfycat.com/FreeReliableAsiaticgreaterfreshwaterclam-size_restricted.gif" />');
+	    $.post("{{ route('airtime.products') }}", {
+          _token: "{{ csrf_token() }}",
+          recipient: $('#phone_number').val()
+        }, function(response){
+            $("#loading").html('');
+          $('#products').html(response).removeClass('d-none');
+          if($('#amount').val())
+          {
+              $('#products-list').val($('#amount').val()).change();
+              $('#valid-msg').text('✓ Valid Number');
+          }
+        });
+	}
 	function initPhoneField(country)
 	{
 		var input = document.querySelector("#phone");
@@ -202,6 +221,8 @@
               $('#operators,#products').removeClass('d-none');
               $('#phone_number').val(iti.getNumber());
               $('#r-phone').text(iti.getNumber());
+              
+              loadAmounts();
             } else {
               input.classList.add("error");
               errorMsg.innerHTML = 'Phone number is not valid';
@@ -216,14 +237,16 @@
 	      allowDropdown: false,
 	      utilsScript: "{{ asset('assets/intl-tel/js/utils.js') }}",
 	      onlyCountries: getKey(country),
+          separateDialCode:true,
           autoPlaceholder: "aggressive"
 	    });
 
         $('#country-name').val(country);
         $('#r-country').text(country);
-        reset();
         @if(!empty($orderData))
-        $('#phone').keyup();
+        loadAmounts();
+        @else
+        reset();
         @endif
 	}
 	initPhoneField("{{ $countryName }}");
@@ -236,28 +259,26 @@
         $('#jump-to-summary').addClass('d-none');
         details_done = false;
     });
-    $(document).on('change', '#products', function(){
+    $(document).on('click', '.box-amount', function(){
+        $('.box-amount').removeClass('selected');
+        $(this).addClass('selected');
         var country = $(this).attr('data-country');
         var operator = $(this).attr('data-operator');
         var operator_id = $(this).attr('data-operator_id');
-        var currency = $(this).data('currency');
-        var product_name = $(this).find('option:selected').attr('data-product') + ' ' + currency;
-        var product_id = product_name;
-        var amount = $(this).val();
+        var currency = $(this).attr('data-currency');
+        var product_name = $(this).attr('data-product') + ' ' + currency;
+        var product_id = $(this).attr('data-product');
+        var amount = $(this).attr('data-value');
 
         $('#country-name').val(country);
         $('#operator-name').val(operator);
-        $('#operator_id').val(operator_id);
+        $('#operator-id').val(operator_id);
         $('#product-id').val(product_id);
         $('#product-name').val(product_name);
         $('#amount').val(amount);
         $('#currency').val(currency);
 
         $('#jump-to-summary').removeClass('d-none');
-    });
-
-    $('#payment-tab,#order-details-tab,#done-tab').click(function(){
-        return false;
     });
 </script>
 @endif

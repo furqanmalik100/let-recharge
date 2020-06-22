@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Traits\ServicesAPI;
 use App\Transaction;
+use App\Setting;
 
 use Stripe;
 
@@ -21,14 +22,14 @@ class ServicesController extends Controller
 
         if(!$this->serviceEnabled($selected_country))
         {
-            return redirect()->route('airtime?selected_country='.$selected_country);
+            return redirect('mobile-topup?selected_country='.$selected_country);
         }
 
-        $services = $this->services($selected_country);
+        // $services = $this->services($selected_country);
         $countryName = $this->getCountryName($selected_country);
         $showRecipient = 'active';
 
-        return view('services', compact('countries', 'services', 'countryName', 'selected_country', 'orderData', 'showRecipient'));
+        return view('services', compact('countries', 'countryName', 'selected_country', 'orderData', 'showRecipient'));
     }
 
     public function showSummary(Request $req)
@@ -44,6 +45,8 @@ class ServicesController extends Controller
 
     public function showDone(Request $req)
     {
+        $orderData = session('service_order_details');
+        
         if(empty($orderData))
             return redirect()->route('home');
 
@@ -80,9 +83,14 @@ class ServicesController extends Controller
 
     public function saveOrderPayment(Request $req)
     {
+        if (!session('stripe_secret_key')) {
+            session([
+                'stripe_secret_key' => Setting::pluck('stripe_secret_key')->first(),
+            ]);
+        }
         $user = auth()->user();
         $orderData = session('service_order_details'); 
-        $stripe = Stripe::make(env('STRIPE_SECRET'));
+        $stripe = Stripe::make(session('stripe_secret_key'));
         $charge = $stripe->charges()->create([
             'source' => $req->stripeToken,
             'currency' => $orderData->currency,

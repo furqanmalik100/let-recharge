@@ -57,7 +57,7 @@
                                 <div class="single-promo text-center">
                                     <h6 class="text-warning bold mb-0 uppercase">{{ $p->country }}</h6>
                                     <div class="img-container">
-                                        <img src="https://operator-logo.dtone.com/logo-{{ $p->operator_id }}-2.png" alt="{{ $p->operator }}">
+                                        <img src="https://operator-logo.dtone.com/logo-{{ $p->operator_id }}-1.png" alt="{{ $p->operator }}">
                                     </div>
                                     <h6 class="text-white"><b class="text-warning">{{ $p->info }}</b></h6>
                                 </div>

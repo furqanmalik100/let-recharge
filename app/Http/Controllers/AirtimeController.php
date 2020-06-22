@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\AirtimeAPI;
+use App\Transaction;
+use App\Setting;
+use Stripe;
 
 class AirtimeController extends Controller
 {
@@ -34,6 +37,8 @@ class AirtimeController extends Controller
 
     public function showDone(Request $req)
     {
+        $orderData = session('airtime_order_details');
+        
         if(empty($orderData))
             return redirect()->route('home');
 
@@ -41,12 +46,13 @@ class AirtimeController extends Controller
         return view('airtime', compact('showDone'));
     }
 
-    public function getProducts($recipient)
+    public function getProducts(Request $req)
     {
     	$data = $this->products([
             'action' => 'msisdn_info',
-            'destination_msisdn' => $recipient
+            'destination_msisdn' => $req->recipient
         ]);
+        // dd($data);
     	return view('ajax.airtime_products', $data);
     }
 
@@ -61,27 +67,35 @@ class AirtimeController extends Controller
 
     public function saveOrderPayment(Request $req)
     {
+        if (!session('stripe_secret_key')) {
+            session([
+                'stripe_secret_key' => Setting::pluck('stripe_secret_key')->first(),
+            ]);
+        }
     	$user = auth()->user();
-    	
         $orderData = session('airtime_order_details'); 
-        $stripe = Stripe::make(env('STRIPE_SECRET'));
+        $stripe = Stripe::make(session('stripe_secret_key'));
+        
         $charge = $stripe->charges()->create([
             'source' => $req->stripeToken,
             'currency' => $orderData->currency,
             'amount'   => $orderData->amount,
         ]);
+    	
 
-        $this->createAirtimeTransaction([
+        $res = $this->createAirtimeTransaction([
         	'delivered_amount_info' => 1,
             'destination_msisdn' => $orderData->phone_number,
             'msisdn' => auth()->user()->name,
             'product' => $orderData->product_id,
             'action' => 'topup'
         ]);
+        // dd($res);
 
         $orderData = (array)$orderData;
         $orderData['type'] = 2;
         $orderData['charge_id'] = $charge['id'];
+        $orderData['recipient'] = $orderData['phone_number'];
         $orderData['user_id'] = $user->id;
         Transaction::create($orderData);
 

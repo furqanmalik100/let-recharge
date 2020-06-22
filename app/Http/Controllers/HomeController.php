@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Traits\ServicesAPI;
+use App\Traits\AirtimeAPI;
 use App\HomeSectionMeta;
 use App\AboutSectionMeta;
 use App\Faq;
@@ -13,7 +13,7 @@ use App\ContactSectionMeta;
 
 class HomeController extends Controller
 {
-    use ServicesAPI;
+    use AirtimeAPI;
 
     public function index()
     {

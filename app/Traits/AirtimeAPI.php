@@ -2,6 +2,7 @@
   
 namespace App\Traits;
 use Illuminate\Support\Facades\Http;
+use App\Setting;
 
 trait AirtimeAPI {
 
@@ -12,10 +13,15 @@ trait AirtimeAPI {
 
 	public function __construct()
 	{
+		session([
+            'airtime_api_login' => Setting::pluck('airtime_api_login')->first(),
+            'airtime_api_token' => Setting::pluck('airtime_api_token')->first(),
+		]);
+
 		$this->host = "https://airtime-api.dtone.com/cgi-bin/shop/topup";
 
-		$login = 'solacom1';
-		$token = '130281784868';
+		$login = session('airtime_api_login');
+		$token = session('airtime_api_token');
 		$nonce = time();
 		$md5 = md5($login.$token.$nonce);
 
@@ -24,17 +30,28 @@ trait AirtimeAPI {
 
 	public function call($method, $params = [])
 	{
-		$params = $this->renderParams($params);
-		
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "$this->host&$params");
+		if($method == 'get')
+		{
+		    $params = $this->renderParams($params);
+		    curl_setopt($ch, CURLOPT_URL, "$this->host&$params");
+		}
+		else
+		{
+		    $params = explode('?', $this->host)[1] .'&'. $this->renderParams($params);
+			curl_setopt($ch, CURLOPT_URL, "$this->host");
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,
+            $params);
+		}
+
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$output = curl_exec($ch);
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 
 		#HANDLE API ERROR HERE LATER
-
+		
 		return (object)[
 			'statusCode' => $status,
 			'body' => $this->parseRawOutput($output),
@@ -135,8 +152,9 @@ trait AirtimeAPI {
 		$data = $response->body;
 		$products = explode(',', $response->body->product_list);
     	$retail_prices = explode(',', $response->body->retail_price_list);
+    	$wholesale_prices = explode(',', $response->body->wholesale_price_list);
 
-    	return compact('data', 'products', 'retail_prices');
+        return compact('data', 'products', 'retail_prices', 'wholesale_prices');
 	}
 
 	public function createAirtimeTransaction($data)

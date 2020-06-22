@@ -12,14 +12,14 @@ class UserController extends Controller
     	$user = auth()->user();
     	$transactions = Transaction::where('user_id', $user->id)->get();
     	$services = $transactions->where('type', 1);
-    	$airtime = $transactions->where('type', 12);
+    	$airtime = $transactions->where('type', 2);
+		$countries = session('airtime_countries');
 
-    	return view('user.dashboard', compact('user', 'services', 'airtime'));
+    	return view('user.dashboard', compact('user', 'services', 'airtime','countries'));
     }
 
     public function profile()
     {
-    	$countries = session('countries');
     	$user = auth()->user();
     	return view('user.profile', compact('user', 'countries'));
     }

@@ -1,7 +1,7 @@
 <?php
   
 namespace App\Traits;
-
+use App\Setting;
 trait ServicesAPI 
 {
 	private $headers;
@@ -13,10 +13,14 @@ trait ServicesAPI
 
 	public function __construct()
 	{
+		session([
+            'services_api_key' => Setting::pluck('services_api_public_key')->first(),
+            'services_api_secret' => Setting::pluck('services_api_secret_key')->first(),
+		]);
 		$this->host = 'https://gs-api.dtone.com/v1.1';
 
-		$key = '7dff6ca2-5be1-4df9-a1ea-3ca27aea0d18';
-		$secret = '5b76143c-7953-4a6d-b861-a1495c10fd0e';
+		$key = session('services_api_key');
+		$secret = session('services_api_secret');
 		$nonce = gettimeofday(true);
 		$hmac = base64_encode(hash_hmac('sha256', $key.$nonce, $secret, true ));
 
@@ -96,6 +100,7 @@ trait ServicesAPI
 	public function services($country_id)
 	{
 		$response = $this->call("services?country_id=$country_id", "get");
+// 		dd($response);
 		return $response->body->services;
 	}
 

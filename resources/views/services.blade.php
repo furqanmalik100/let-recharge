@@ -73,9 +73,7 @@
                                 </label>
                                 <select class="form-control" name="service_id" id="services">
                                     <option selected disabled="" value="">Select Service</option>
-                                    @foreach($services as $s)
-                                    <option value="{{ $s->service_id }}">{{ $s->service }}</option>
-                                    @endforeach
+                                    <option value="7">bundles</option>
                                 </select>
                             </div>
                             <div class="form-group" id="recipient-phone">
@@ -88,6 +86,7 @@
                             </div>
                             <div class="form-group d-none" id="operators">
                             </div>
+                            <div id="loading"></div> 
                             <div class="form-group d-none" id="products">
                             </div>
                             <div class="buttons d-none mt-0 text-left" role="tablist" id="jump-to-summary">
@@ -130,7 +129,7 @@
                             @csrf
                             <div class="buttons">
                                 <a class="theme-btn bold" href="javascript:;" id="pay-amount" 
-                                data-key="pk_test_YSnWvfoEhc4OukRBrk3qNFtM00vh7y94PO"
+                                data-key="{{ App\Setting::pluck('stripe_public_key')->first() }}"
                                 data-amount="{{ $orderData->amount * 100 }}"
                                 data-currency="USD"
                                 data-name="Let Recharge"
@@ -159,6 +158,11 @@
 </form>
 @endsection
 @push('js') 
+<script>
+    $('#payment-tab, #order-details-tab, #done-tab').click(function(){
+        return false;
+    });
+</script>
 @if(!empty($showSummary))
 <script src="https://checkout.stripe.com/v2/checkout.js"></script>
 <script type="text/javascript">
@@ -227,6 +231,7 @@
 	      allowDropdown: false,
 	      utilsScript: "{{ asset('assets/intl-tel/js/utils.js') }}",
 	      onlyCountries: getKey(country),
+          separateDialCode:true,
           autoPlaceholder: "aggressive"
 	    });
 
@@ -249,11 +254,13 @@
         details_done = false;
     });
     $(document).on('change', '[name="service_id"]', function(){
+        $("#loading").html('<img width="50" src="https://thumbs.gfycat.com/FreeReliableAsiaticgreaterfreshwaterclam-size_restricted.gif" />');
         $.post('{{ route("service.operators") }}', {
             _token: '{{ csrf_token() }}',
             country_id: $('#countries').val(),
             service_id: $(this).val()
         }, function(response){
+            $("#loading").html('');
             $('#operators').html(response);
             @if(!empty($orderData))
             $('#operators').removeClass('d-none');
@@ -263,10 +270,12 @@
     });
     $(document).on('click', '.operator-img-box', function(){
         var operator_id = $(this).attr('data-id');
+        $("#loading").html('<img width="50" src="https://thumbs.gfycat.com/FreeReliableAsiaticgreaterfreshwaterclam-size_restricted.gif" />');
         $.post('{{ route("operator.products") }}', {
             _token: '{{ csrf_token() }}',
             operator_id: operator_id
         }, function(response){
+            $("#loading").html('');
             $('#products').html(response).removeClass('d-none');
             @if(!empty($orderData))
             $('.product-box[data-id="{{ $orderData->product_id }}"]').click();

@@ -1,9 +1,20 @@
 <label for="products">
-	Select Product
+	Select Amount
 </label>
-<select class="form-control" id="products" data-country="{{ $data->country }}" data-country_id="{{ $data->countryid }}" data-operator="{{ $data->operator }}" data-operator_id="{{ $data=>operatorid }}">
-	<option selected disabled="" value="">Select Service</option>
+<div class="row">
 	@for($i=0;$i<sizeof($products);$i++)
-	<option value="{{ $retail_prices[$i] }}" data-product="{{ $products[$i] }}">{{ $retail_prices[$i] }}</option>
+	<div class="col-lg-2 mb-4">
+		<div class="product-box text-center box-amount" data-value="{{ $retail_prices[$i] }}" data-product="{{ $products[$i] }}" data-country="{{ $data->country }}" data-country_id="{{ $data->countryid }}" data-operator="{{ $data->operator }}" data-operator_id="{{ $data->operatorid }}" data-currency="{{ $data->destination_currency }}">
+			<h6 class="mb-0">
+				${{ $wholesale_prices[$i] }}
+			</h6>
+			<p class="mb-0" style="font-size: 12px;">
+			    <small>(Inc. Tax ${{ $retail_prices[$i] - $wholesale_prices[$i] }})</small>
+			</p>
+			<h5 class="text-warning mb-0">
+				${{ $retail_prices[$i] }}
+			</h5>
+		</div>
+	</div>
 	@endfor
-</select>
+</div>
