@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\AirtimeAPI;
+use App\Traits\TwilioAPI;
 use App\Transaction;
 use App\Setting;
 use Stripe;
@@ -11,6 +12,7 @@ use Stripe;
 class AirtimeController extends Controller
 {
     use AirtimeAPI;
+    use TwilioAPI;
 
     public function index(Request $req)
     {
@@ -98,7 +100,7 @@ class AirtimeController extends Controller
         $orderData['recipient'] = $orderData['phone_number'];
         $orderData['user_id'] = $user->id;
         Transaction::create($orderData);
-
+        $this->sendMessage('Successfully Purchased!', $orderData['phone_number']);
         return redirect()->route('airtime.show-done');
     }
 }

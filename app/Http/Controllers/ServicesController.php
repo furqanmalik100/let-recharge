@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\ServicesAPI;
+use App\Traits\TwilioAPI;
 use App\Transaction;
 use App\Setting;
 
@@ -12,6 +13,7 @@ use Stripe;
 class ServicesController extends Controller
 {
 	use ServicesAPI;
+    use TwilioAPI;
 
     public function index(Request $req)
     {
@@ -111,7 +113,7 @@ class ServicesController extends Controller
         $orderData['user_id'] = $user->id;
         $orderData['recipient'] = $orderData['phone_number'];
         Transaction::create($orderData);
-
+        $this->sendMessage('Successfully Purchased!', $orderData['phone_number']);
         return redirect()->route('services.show-done');
     }
 }
