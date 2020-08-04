@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
+        Vedmant\FeedReader\FeedReaderServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -227,6 +228,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
+        'FeedReader' => Vedmant\FeedReader\Facades\FeedReader::class,
 
     ],
 
